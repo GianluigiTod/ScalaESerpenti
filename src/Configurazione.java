@@ -1,5 +1,7 @@
 package src;
 
+import src.game.Giocatore;
+
 import java.util.List;
 
 public class Configurazione {
@@ -12,7 +14,9 @@ public class Configurazione {
     private final boolean casellaPremio;
     private final boolean casellaPesca;
     private final boolean ulterioriCarte;
-    private final List<String> giocatori;
+    private final List<Giocatore> giocatori;
+    private final String path;
+
 
     public static class Builder{
         //parametro richiesto necessariamente
@@ -23,7 +27,8 @@ public class Configurazione {
         private boolean dadoSingolo = false; private boolean lancioDiUnDado = false;
         private boolean doppioSei = false; private boolean casellaSosta = false;
         private boolean casellaPremio = false;private boolean casellaPesca = false;
-        private boolean ulterioriCarte = false;
+        private boolean ulterioriCarte = false;private boolean automatico = true;
+        private String path = "./tracciaDelGioco.txt";
 
         public Builder(List<String> giocatori) {
             this.giocatori = giocatori;
@@ -76,6 +81,8 @@ public class Configurazione {
                 ulterioriCarte = val; return this;
             }
         }
+        public Builder automatico(boolean val){automatico = val; return this;}
+        public Builder path(String val){path = val; return this;}
         public Configurazione build(){return new Configurazione(this);}
     }//Builder
     private Configurazione(Builder builder){
@@ -89,8 +96,42 @@ public class Configurazione {
         casellaPremio = builder.casellaPremio;
         casellaPesca = builder.casellaPesca;
         ulterioriCarte = builder.ulterioriCarte;
-
+        path = builder.path;
     }
 
 
+    //Getter
+    public Integer getnRighe() {
+        return nRighe;
+    }
+    public Integer getnColonne() {
+        return nColonne;
+    }
+    public boolean isDadoSingolo() {
+        return dadoSingolo;
+    }
+    public boolean isLancioDiUnDado() {
+        return lancioDiUnDado;
+    }
+    public boolean isDoppioSei() {
+        return doppioSei;
+    }
+    public boolean isCasellaSosta() {
+        return casellaSosta;
+    }
+    public boolean isCasellaPesca(){
+        return casellaPesca;
+    }
+    public boolean isCasellaPremio() {
+        return casellaPremio;
+    }
+    public boolean isUlterioriCarte() {
+        return ulterioriCarte;
+    }
+    public String getPath() {
+        return path;
+    }
+    public List<Giocatore> getGiocatori() {
+        return giocatori;
+    }
 }
