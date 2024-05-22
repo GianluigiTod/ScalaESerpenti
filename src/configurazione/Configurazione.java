@@ -1,7 +1,8 @@
-package src;
+package src.configurazione;
 
 import src.game.Giocatore;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Configurazione {
@@ -15,12 +16,14 @@ public class Configurazione {
     private final boolean casellaPesca;
     private final boolean ulterioriCarte;
     private final List<Giocatore> giocatori;
+    private final List<Scala> listaScale;
+    private final List<Serpente> listaSerpenti;
     private final String path;
 
 
     public static class Builder{
         //parametro richiesto necessariamente
-        private final List<String> giocatori;
+        private final List<Giocatore> giocatori;
 
         //parametri opzionali
         private Integer nRighe = null; private Integer nColonne = null;
@@ -28,9 +31,10 @@ public class Configurazione {
         private boolean doppioSei = false; private boolean casellaSosta = false;
         private boolean casellaPremio = false;private boolean casellaPesca = false;
         private boolean ulterioriCarte = false;private boolean automatico = true;
+        private List<Scala> listaScale = new ArrayList<>(); private List<Serpente> listaSerpenti = new ArrayList<>();
         private String path = "./tracciaDelGioco.txt";
 
-        public Builder(List<String> giocatori) {
+        public Builder(List<Giocatore> giocatori) {
             this.giocatori = giocatori;
         }
 
@@ -81,7 +85,8 @@ public class Configurazione {
                 ulterioriCarte = val; return this;
             }
         }
-        public Builder automatico(boolean val){automatico = val; return this;}
+        public Builder listaScale(List<Scala> val) {listaScale=val; return this;}
+        public Builder listaSerpenti(List<Serpente> val) {listaSerpenti=val; return this;}
         public Builder path(String val){path = val; return this;}
         public Configurazione build(){return new Configurazione(this);}
     }//Builder
@@ -96,6 +101,8 @@ public class Configurazione {
         casellaPremio = builder.casellaPremio;
         casellaPesca = builder.casellaPesca;
         ulterioriCarte = builder.ulterioriCarte;
+        listaScale = builder.listaScale;
+        listaSerpenti = builder.listaSerpenti;
         path = builder.path;
     }
 
@@ -133,5 +140,11 @@ public class Configurazione {
     }
     public List<Giocatore> getGiocatori() {
         return giocatori;
+    }
+    public List<Scala> getListaScale() {
+        return listaScale;
+    }
+    public List<Serpente> getListaSerpenti() {
+        return listaSerpenti;
     }
 }
