@@ -1,6 +1,5 @@
 package src.configurazione;
 
-import src.game.Giocatore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +14,7 @@ public class Configurazione {
     private final boolean casellaPremio;
     private final boolean casellaPesca;
     private final boolean ulterioriCarte;
-    private final List<Giocatore> giocatori;
+    private final List<InfoGiocatore> giocatori;
     private final List<Scala> listaScale;
     private final List<Serpente> listaSerpenti;
     private final String path;
@@ -23,7 +22,7 @@ public class Configurazione {
 
     public static class Builder{
         //parametro richiesto necessariamente
-        private final List<Giocatore> giocatori;
+        private final List<InfoGiocatore> giocatori;
 
         //parametri opzionali
         private Integer nRighe = null; private Integer nColonne = null;
@@ -34,7 +33,7 @@ public class Configurazione {
         private List<Scala> listaScale = new ArrayList<>(); private List<Serpente> listaSerpenti = new ArrayList<>();
         private String path = "./tracciaDelGioco.txt";
 
-        public Builder(List<Giocatore> giocatori) {
+        public Builder(List<InfoGiocatore> giocatori) {
             this.giocatori = giocatori;
         }
 
@@ -138,7 +137,7 @@ public class Configurazione {
     public String getPath() {
         return path;
     }
-    public List<Giocatore> getGiocatori() {
+    public List<InfoGiocatore> getGiocatori() {
         return giocatori;
     }
     public List<Scala> getListaScale() {

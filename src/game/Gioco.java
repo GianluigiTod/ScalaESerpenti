@@ -1,6 +1,7 @@
 package src.game;
 
 import src.configurazione.Configurazione;
+import src.configurazione.InfoGiocatore;
 import src.configurazione.Scala;
 import src.configurazione.Serpente;
 import src.game.caselle.Casella;
@@ -11,7 +12,8 @@ import java.util.Random;
 
 public class Gioco {
     private static Gioco instance;
-    private final List<Giocatore> giocatori;
+    private List<Giocatore> giocatori;
+    private final List<InfoGiocatore> infoGioc;
     private Casella[][] tabellone;
     private final Configurazione configurazione;
     private Giocatore currentPlayer;
@@ -21,17 +23,21 @@ public class Gioco {
 
     // Enum per i tipi di caselle
     public enum TipoCasella {
-        NORMALE, SOSTA, PREMIO, PESCA
+        NORMALE, SOSTALUNGA, SOSTACORTA, PREMIO, PESCA
     }
 
     // Costruttore privato per Singleton
     private Gioco(Configurazione configurazione) {
         this.configurazione = configurazione;
-        giocatori = configurazione.getGiocatori();
+        infoGioc=configurazione.getGiocatori();
+        giocatori = creaListaGiocatori();
         listaScale = configurazione.getListaScale();
         listaSerpenti = configurazione.getListaSerpenti();
         inizializzaTabellone();
         currentPlayer = null; // Nessun giocatore corrente all'inizio
+        // Creare la board e disegnare la matrice di celle
+        board = Board.getIstance(tabellone, this.configurazione, giocatori);//i giocatori ti servono per generare le pedine
+
     }
 
     // Metodo per ottenere l'unica istanza di Gioco
@@ -80,13 +86,10 @@ public class Gioco {
 
     // Metodo per iniziare il gioco
     public void play() {
-        // Creare la board e disegnare la matrice di celle
-        board = new Board(tabellone);
-
         while (!isGameOver()) {
             for (Giocatore giocatore : giocatori) {
                 currentPlayer = giocatore;
-                currentPlayer.gestisciTurno(board);//gli passo la board così se avviene una modifica ci pensa il giocatore a segnalarla
+                currentPlayer.gestisciTurno();//gli passo la board così se avviene una modifica ci pensa il giocatore a segnalarla
                 if (isGameOver()) {
                     break;
                 }
@@ -109,7 +112,8 @@ public class Gioco {
         } else {
             List<TipoCasella> tipiNonNormali = new ArrayList<>();
             if (configurazione.isCasellaSosta()) {
-                tipiNonNormali.add(TipoCasella.SOSTA);
+                tipiNonNormali.add(TipoCasella.SOSTALUNGA);
+                tipiNonNormali.add(TipoCasella.SOSTACORTA);
             }
             if (configurazione.isCasellaPremio()) {
                 tipiNonNormali.add(TipoCasella.PREMIO);
@@ -139,10 +143,11 @@ public class Gioco {
     private Casella creaCasella(int numeroCasella, TipoCasella tipo) {
         switch (tipo) {
             case NORMALE:
-
                 return new CasellaNormale(numeroCasella);
-            case SOSTA:
-                return new CasellaSosta(numeroCasella);
+            case SOSTALUNGA:
+                return new CasellaSostaLunga(numeroCasella);
+            case SOSTACORTA:
+                return new CasellaSostaCorta(numeroCasella);
             case PREMIO:
                 return new CasellaPremio(numeroCasella);
             case PESCA:
@@ -151,5 +156,18 @@ public class Gioco {
                 // Se il tipo non è valido, creiamo una casella normale di default
                 return new CasellaNormale(numeroCasella);
         }
+    }
+
+    private List<Giocatore> creaListaGiocatori(){
+        giocatori = new ArrayList<>();
+        for(InfoGiocatore info : infoGioc){
+            if(info.getTipo().equals("TipoManuale")){
+                giocatori.add(new Player(info.getNome(), configurazione, board));
+            }
+            if(info.getTipo().equals("TipoAutomatico")){
+                giocatori.add(new CpuPlayer(info.getNome(), configurazione, board));
+            }
+        }
+        return giocatori;
     }
 }
