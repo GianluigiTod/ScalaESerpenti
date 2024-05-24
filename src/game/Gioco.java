@@ -5,6 +5,9 @@ import src.configurazione.InfoGiocatore;
 import src.configurazione.Scala;
 import src.configurazione.Serpente;
 import src.game.caselle.Casella;
+import src.game.giocatore.CpuPlayer;
+import src.game.giocatore.Giocatore;
+import src.game.giocatore.Player;
 
 import java.util.ArrayList;
 import java.util.List;

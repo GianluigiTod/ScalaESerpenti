@@ -1,10 +1,10 @@
-package src.game;
+package src.game.giocatore;
 
 import src.configurazione.Configurazione;
 
 import java.util.Random;
 
-public class CpuPlayer extends AbstractGiocatore{
+public class CpuPlayer extends AbstractGiocatore {
 
     public CpuPlayer(String nome, Configurazione config, Board board) {
         super(nome, config, board);

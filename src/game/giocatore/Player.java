@@ -1,13 +1,8 @@
-package src.game;
+package src.game.giocatore;
 
 import src.configurazione.Configurazione;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-
-public class Player extends AbstractGiocatore{
+public class Player extends AbstractGiocatore {
 
     public Player(String nome, Configurazione config, Board board) {
         super(nome, config, board);

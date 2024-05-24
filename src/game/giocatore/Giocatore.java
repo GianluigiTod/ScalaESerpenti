@@ -1,4 +1,4 @@
-package src.game;
+package src.game.giocatore;
 
 public interface Giocatore {
 

@@ -1,4 +1,4 @@
-package src.game;
+package src.game.giocatore;
 
 import src.configurazione.Configurazione;
 
@@ -6,8 +6,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 public abstract class AbstractGiocatore implements Giocatore {
