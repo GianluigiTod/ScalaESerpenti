@@ -1,13 +1,15 @@
-package src.game;
+package src.game.giocatore;
 
 import src.configurazione.Configurazione;
+import src.game.Board;
+import src.game.GameMediator;
 
 import java.util.Random;
 
-public class CpuPlayer extends AbstractGiocatore{
+public class CpuPlayer extends AbstractGiocatore {
 
-    public CpuPlayer(String nome, Configurazione config, Board board) {
-        super(nome, config, board);
+    public CpuPlayer(String nome, Configurazione config, GameMediator mediator) {
+        super(nome, config, mediator, true );
     }
 
     @Override

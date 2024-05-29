@@ -5,6 +5,9 @@ import src.configurazione.InfoGiocatore;
 import src.configurazione.Scala;
 import src.configurazione.Serpente;
 import src.game.caselle.Casella;
+import src.game.giocatore.CpuPlayer;
+import src.game.giocatore.Giocatore;
+import src.game.giocatore.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +23,8 @@ public class Gioco {
     private Board board;
     private final List<Scala> listaScale;
     private final List<Serpente> listaSerpenti;
+    private GameMediator mediator;
+    private GameMediatorEsteso Pmediator;
 
     // Enum per i tipi di caselle
     public enum TipoCasella {
@@ -36,7 +41,10 @@ public class Gioco {
         inizializzaTabellone();
         currentPlayer = null; // Nessun giocatore corrente all'inizio
         // Creare la board e disegnare la matrice di celle
-        board = Board.getIstance(tabellone, this.configurazione, giocatori);//i giocatori ti servono per generare le pedine
+
+        board = BoardStandard.getInstance(tabellone, this.configurazione, giocatori);//i giocatori ti servono per generare le pedine
+        Pmediator = new GameMediatorEsteso(board);
+        mediator = new GameMediator(board);
 
     }
 
@@ -162,10 +170,10 @@ public class Gioco {
         giocatori = new ArrayList<>();
         for(InfoGiocatore info : infoGioc){
             if(info.getTipo().equals("TipoManuale")){
-                giocatori.add(new Player(info.getNome(), configurazione, board));
+                giocatori.add(new Player(info.getNome(), configurazione, Pmediator));
             }
             if(info.getTipo().equals("TipoAutomatico")){
-                giocatori.add(new CpuPlayer(info.getNome(), configurazione, board));
+                giocatori.add(new CpuPlayer(info.getNome(), configurazione, mediator));
             }
         }
         return giocatori;

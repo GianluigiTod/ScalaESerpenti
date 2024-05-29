@@ -1,14 +1,15 @@
-package src.game;
+package src.game.giocatore;
 
 import src.configurazione.Configurazione;
+import src.game.Board;
+import src.game.GameMediator;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
+
 
 public abstract class AbstractGiocatore implements Giocatore {
     protected String nome;
@@ -17,27 +18,31 @@ public abstract class AbstractGiocatore implements Giocatore {
     private File file;
     private boolean vincitore;
     protected int nTurniStop;
-    protected Board board;
+    protected final int dimensioneBoard;
     protected final Configurazione config;
     protected int tiro;
     protected final Dado dado;
     protected int numCarte;
+    protected final boolean automatico;
+    protected GameMediator mediator;
 
 
     //creare istanze di AbstractGiocatore è l'unico modo per considerare le possibili regole che potrebbero essere
     //implementate, inoltre creo delle sottoclassi perché mi conviene per il progetto che devo realizzare
     // se volessi creare un nuovo set di regole, bisognerebbe creare una nuova classe che implementa Giocatore  per definire
     //un nuovo comportamento
-    public AbstractGiocatore(String nome, Configurazione config, Board board) {
+    public AbstractGiocatore(String nome, Configurazione config, GameMediator mediator, boolean automatico) {
         this.nome = nome;
         this.posizione = 1;
         this.path = config.getPath();
         file = new File(path);
-        this.board = board;
+        this.mediator=mediator;
         this.config = config;
         this.tiro = 0;
         dado=new Dado();
         this.numCarte = 0;
+        dimensioneBoard=config.getnColonne()*config.getnRighe();
+        this.automatico=automatico;
     }
 
     @Override
@@ -50,15 +55,14 @@ public abstract class AbstractGiocatore implements Giocatore {
         //Scrivere il codice per avvisare l'Interfaccia grafica che è cominciato un nuovo turno e quindi eventualmente deve aggiornarsi
         //Ad esempio avevo pensato di rendere di nuovo non visibile il bottone per passare al nuovo turno
 
-        board.cominciaTurno(nome);
+        mediator.notify(this, "cominciaTurno");
 
         stampa("È il turno del giocatore:"+nome+"\n"+nome+" sta per tirare i dadi");
     }
 
     @Override
     public void gestisciEvento() {
-        board.gestisciEvento(this);//facciamo gestire l'evento alla cella della board
-        board.avvisoEventoEffettuato();
+        mediator.notify(this, "gestisciEvento");//facciamo gestire l'evento alla cella della board
     }
 
     @Override
@@ -66,14 +70,10 @@ public abstract class AbstractGiocatore implements Giocatore {
         return vincitore;
     }
 
-    @Override
-    public void finePartita() {
-
-    }
 
     @Override
     public void gameOver() {
-        if(posizione == board.getNumUltimaCasella()){
+        if(posizione == dimensioneBoard){
             vincitore=true;
         }
     }
@@ -120,7 +120,7 @@ public abstract class AbstractGiocatore implements Giocatore {
             tiro=0;
             nTurniStop--;
         }
-        board.avvisoLancioEffettuato();
+        mediator.notify(this, "lancioEffettuato");
     }
 
     public abstract int[] gestioneTiro(int tiro1, int tiro2);
@@ -130,12 +130,12 @@ public abstract class AbstractGiocatore implements Giocatore {
     @Override
     public void spostamento() {
         int nuovaPos = posizione + tiro;
-        if(nuovaPos > board.getDimensione()){
-            nuovaPos = board.getDimensione() - (nuovaPos - board.getDimensione());
+        if(nuovaPos > dimensioneBoard){
+            nuovaPos = dimensioneBoard - (nuovaPos - dimensioneBoard);
         }
         posizione=nuovaPos;
         stampa(nome+" è nella casella "+nuovaPos);
-        board.avvisoSpostamentoEffettuato();//aggiornare la posizione della pedina che si è spostata
+        mediator.notify(this, "spostamentoEffettuato");
     }
 
     private void stampa(String stringa){
@@ -156,5 +156,60 @@ public abstract class AbstractGiocatore implements Giocatore {
             Random rand = new Random();
             return (rand.nextInt(6))+1;
         }
+    }
+
+    @Override
+    public void finePartita(){
+        mediator.notify(this, "finePartita");
+    }
+
+
+    //GETTER AND SETTER
+
+    @Override
+    public String getNome() {
+        return nome;
+    }
+
+
+    @Override
+    public int getPosizione() {
+        return posizione;
+    }
+
+    @Override
+    public void setPosizione(int posizione) {
+        this.posizione = posizione;
+    }
+
+    @Override
+    public int getNTurniStop() {
+        return nTurniStop;
+    }
+
+    @Override
+    public void setNTurniStop(int nTurniStop) {
+        nTurniStop = nTurniStop;
+    }
+
+    @Override
+    public int getTiro() {
+        return tiro;
+    }
+
+
+    @Override
+    public int getNumCarte() {
+        return numCarte;
+    }
+
+    @Override
+    public void setNumCarte(int numCarte) {
+        this.numCarte = numCarte;
+    }
+
+    @Override
+    public boolean isAutomatico() {
+        return automatico;
     }
 }

@@ -1,4 +1,4 @@
-package src.game;
+package src.game.giocatore;
 
 public interface Giocatore {
 
@@ -13,7 +13,7 @@ public interface Giocatore {
             gestisciEvento();
         }
     }
-    void gestisciEvento();
+    void gestisciEvento();//non voglio obbligare nessun tipo di giocatore ad usare necessariamente l'interfaccia grafica
     boolean isWinner();//metodo getter
     void nuovoTurno();
     void gameOver();
@@ -23,4 +23,17 @@ public interface Giocatore {
     // del board e fargli sapere (VEDERE PATTERN OBSERVER) che il giocatore con quel determinato nome si è aggiornato
     //perciò bisogna aggiornare la pedina a cui è collegato (la board ha la lista dei giocatori dalla configurazione)
     //che avrà un metodo draw che verrà rieseguito
+
+    //metodi getter and setter
+
+    String getNome();
+    int getPosizione();
+    void setPosizione(int posizione);
+    int getNTurniStop();
+    void setNTurniStop(int nTurniStop);
+    int getTiro();
+    int getNumCarte();
+    void setNumCarte(int numCarte);
+    boolean isAutomatico();
+
 }
